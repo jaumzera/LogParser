@@ -64,9 +64,13 @@ public class ArgsParser {
 	}
 
 	private void checkIfExists(String argName) {
-		if(!args.containsKey(argName)) {
+		if(!contains(argName)) {
 			throw new IllegalArgumentException("Argument not found: --" + argName);
 		}
+	}
+	
+	public boolean contains(String argName) {
+		return args.containsKey(argName);
 	}
 
 	@Value

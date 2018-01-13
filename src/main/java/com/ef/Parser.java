@@ -90,15 +90,31 @@ public class Parser {
 	}
 
 	public static void main(String[] args) {
-		ArgsParser argsParser = ArgsParser.of(args);
-		File mockFile = new File("/home/jaumzera/dev_projects/wallethub/access.log");  // FIXME mock
-
-		LocalDateTime begin = argsParser.getArgAsLocalDateTime("startDate");
-		Duration duration = Duration.hourly(begin);
-
-		int threshold = argsParser.getArgAsInt("threshold");
-
-		Parser parser = new Parser(mockFile, duration, threshold);
-		parser.parse();
+		try {
+			ArgsParser argsParser = ArgsParser.of(args);
+			
+			File logfile;
+			if(argsParser.contains("file")) {
+				logfile = argsParser.getArgAsFile("file");
+			} else {
+				logfile = new File("./accesslog.log");
+			}
+			
+			if(!logfile.exists()) {
+				System.out.println("Log file not found.");
+				System.exit(1);
+			}
+	
+			LocalDateTime begin = argsParser.getArgAsLocalDateTime("startDate");
+			Duration duration = Duration.hourly(begin);
+	
+			int threshold = argsParser.getArgAsInt("threshold");
+	
+			Parser parser = new Parser(logfile, duration, threshold);
+			parser.parse();
+		} catch(IllegalArgumentException ex) {
+			log.log(Level.SEVERE,  null,  ex);
+			System.out.println(ex.getMessage());
+		}
 	}
 }

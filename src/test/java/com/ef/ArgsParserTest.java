@@ -1,6 +1,8 @@
 package com.ef;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -72,5 +74,12 @@ public class ArgsParserTest {
 	public void shouldNotReturnArgumentAsFile() {
 		ArgsParser args = ArgsParser.of(new String[0]);
 		args.getArgAsFile("non-existent");
+	}
+	
+	@Test
+	public void shouldCheckIfAArgWasSpecified() {
+		ArgsParser args = ArgsParser.of(new String[] {"--someText=xxx"});
+		assertTrue(args.contains("someText"));
+		assertFalse(args.contains("noArgs"));
 	}
 }
