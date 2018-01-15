@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import lombok.extern.java.Log;
+import org.apache.log4j.Level;
 
-@Log
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 public class Parser {
 
 	private final String outputMessage;
@@ -65,7 +66,7 @@ public class Parser {
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			logEntries = br.lines().map(LogEntry::of).collect(Collectors.toList());
 		} catch (IOException ex) { 
-			log.log(Level.SEVERE, null, ex);
+			log.log(Level.ERROR, null, ex);
 		}
 	}
 
@@ -97,7 +98,7 @@ public class Parser {
 			if(argsParser.contains("file")) {
 				logfile = argsParser.getArgAsFile("file");
 			} else {
-				logfile = new File("./accesslog.log");
+				logfile = new File("./access.log");
 			}
 			
 			if(!logfile.exists()) {
@@ -113,7 +114,7 @@ public class Parser {
 			Parser parser = new Parser(logfile, duration, threshold);
 			parser.parse();
 		} catch(IllegalArgumentException ex) {
-			log.log(Level.SEVERE,  null,  ex);
+			log.log(Level.ERROR,  null,  ex);
 			System.out.println(ex.getMessage());
 		}
 	}
